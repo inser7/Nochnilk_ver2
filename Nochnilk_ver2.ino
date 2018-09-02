@@ -127,7 +127,7 @@ void loop() {
         }
       }
       if(tm.Hour >= 0 && tm.Hour < 7 ){
-        ledMode = 110; // white
+        ledMode = 110; // warm white
         LEDS.setBrightness(15);
         Serial.println("Night");
       }
