@@ -121,7 +121,7 @@ void loop() {
       }
     }
     
-    if(tm.Hour >= 22 && tm.Hour < 0 ){
+    if(tm.Hour >= 22){
        ledMode = 110; // warm whtie
        LEDS.setBrightness(20);
     }
