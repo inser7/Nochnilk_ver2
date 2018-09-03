@@ -87,17 +87,6 @@ void setup()
   randomSeed(analogRead(0));
 }
 
-void randomChange(){
-    ledMode = fav_modes[random(0, num_modes - 1)]; 
-    LEDS.setBrightness(max_bright);
-    Serial.println(ledMode);
-    switch (ledMode) {
-      case 2: rainbowCycle(thisdelay); break;            // плавная смена цветов всей ленты4
-      case 3: rainbow_fade(60); break;            // крутящаяся радуга
-      case 4: new_rainbow_loop(thisdelay);break;       
-    }
-}
-
 void loop() {
   button.tick();
   tmElements_t tm;
@@ -109,29 +98,42 @@ void loop() {
       LEDS.setBrightness(new_bright);        // установить новую яркость
     }
   }
-  
-  if (millis() - last_change > 120000){                      // если прошла 2 минуты
-    if (RTC.read(tm)) {
-      if(tm.Hour >= 20){    // если совпали часы
-        if(tm.Hour >= 21){
-          ledMode = 110; // warm whtie
-          LEDS.setBrightness(40);
-          if(tm.Minute > 30){
-            ledMode = 110; // white
-            LEDS.setBrightness(20);
-          }
-        }
-        else{
-          ledMode = 4;
-          LEDS.setBrightness(100);
-        }
+
+ if (millis() - last_change > 120000){ 
+  if (RTC.read(tm)) {   
+    
+    if(tm.Hour >= 18 && tm.Hour < 20 ){
+      LEDS.setBrightness(max_bright);
+      ledMode = fav_modes[random(0, num_modes - 1)];
+    }
+    
+    if(tm.Hour >= 20 && tm.Hour < 20 ){
+       ledMode = 4;
+       LEDS.setBrightness(100);
+    }
+    
+    if(tm.Hour >= 21){
+      ledMode = 110; // warm whtie
+      LEDS.setBrightness(40);
+      
+      if(tm.Minute >= 30 ){
+        ledMode = 110; // warm whtie
+        LEDS.setBrightness(25);
       }
-      if(tm.Hour >= 0 && tm.Hour < 7 ){
+    }
+    
+    if(tm.Hour >= 22 && tm.Hour < 0 ){
+       ledMode = 110; // warm whtie
+       LEDS.setBrightness(20);
+    }
+    
+    if(tm.Hour >= 0 && tm.Hour < 7 ){
         ledMode = 110; // warm white
-        LEDS.setBrightness(15);
+        LEDS.setBrightness(10);
         Serial.println("Night");
-      }
-      if(tm.Hour >= 7 && tm.Hour < 8 ){
+    }
+
+    if(tm.Hour >= 7 && tm.Hour < 8 ){
         LEDS.setBrightness(max_bright);
         if(tm.Minute < 30){
           ledMode = 104; //temp=104 // white = 1
@@ -140,24 +142,22 @@ void loop() {
           ledMode = 102; //green
         }
         Serial.println("Morning");
-      }
-      if(tm.Hour >= 8 && tm.Hour < 9 ){
+    }
+
+    if(tm.Hour >= 8 && tm.Hour < 9 ){
         LEDS.setBrightness(max_bright);
         ledMode = 101; //red
         Serial.println("Go to childrengarden");
-      }
-      if(tm.Hour >= 9 && tm.Hour < 18 ){
+    }
+    
+    if(tm.Hour >= 9 && tm.Hour < 18 ){
         LEDS.setBrightness(0);
         ledMode = 0;
         Serial.println("Do nothing");
-      }
-      if(tm.Hour >= 18 && tm.Hour < 20 ){
-        LEDS.setBrightness(max_bright);
-        ledMode = fav_modes[random(0, num_modes - 1)];
-      }
     }
-    last_change = millis();
-   }
+  }
+  last_change = millis();
+ }
 
 //  if (millis() - last_change > change_time) {
 //    change_time = random(5000, 20000);                // получаем новое случайное время до следующей смены режима
@@ -171,6 +171,11 @@ void loop() {
       LEDS.setBrightness(max_bright);
       Serial.println(ledMode);
     }
+
+    changeMode(ledMode);
+ }
+
+ void changeMode(int mode){
     switch (ledMode) {
       case 999: break;                           // пазуа
       case 0: one_color_all(0, 0, 0); LEDS.show(); break; //---ALL OFF
@@ -195,8 +200,17 @@ void loop() {
   
       case 110: one_color_all(255, 147, 41); LEDS.show(); break; // Candle
   }
- }
+}
 
+void randomChange(){
+    ledMode = fav_modes[random(0, num_modes - 1)]; 
+    LEDS.setBrightness(max_bright);
+    Serial.println(ledMode);
+    changeMode(ledMode); // 2, 3, 4
+}
+
+
+///effects
 void one_color_all(int cred, int cgrn, int cblu) {       //-SET ALL LEDS TO ONE COLOR
   for (int i = 0 ; i < LED_COUNT; i++ ) {
     leds[i].setRGB( cred, cgrn, cblu);
