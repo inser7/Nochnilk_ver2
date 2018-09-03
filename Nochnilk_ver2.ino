@@ -101,13 +101,12 @@ void loop() {
 
  if (millis() - last_change > 120000){ 
   if (RTC.read(tm)) {   
-    
-    if(tm.Hour >= 18 && tm.Hour < 20 ){
+    if(tm.Hour >= 18 && tm.Hour < 20){
       LEDS.setBrightness(max_bright);
       ledMode = fav_modes[random(0, num_modes - 1)];
     }
     
-    if(tm.Hour >= 20 && tm.Hour < 20 ){
+    if(tm.Hour >= 20 && tm.Hour < 21){
        ledMode = 4;
        LEDS.setBrightness(100);
     }
