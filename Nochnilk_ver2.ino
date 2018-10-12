@@ -113,22 +113,22 @@ void loop() {
     
     if(tm.Hour >= 21){
       ledMode = 110; // warm whtie
-      LEDS.setBrightness(40);
+      LEDS.setBrightness(30);
       
       if(tm.Minute >= 30 ){
         ledMode = 110; // warm whtie
-        LEDS.setBrightness(25);
+        LEDS.setBrightness(15);
       }
     }
     
     if(tm.Hour >= 22){
        ledMode = 110; // warm whtie
-       LEDS.setBrightness(20);
+       LEDS.setBrightness(6);
     }
     
     if(tm.Hour >= 0 && tm.Hour < 7 ){
         ledMode = 110; // warm white
-        LEDS.setBrightness(10);
+        LEDS.setBrightness(3);
         Serial.println("Night");
     }
 
